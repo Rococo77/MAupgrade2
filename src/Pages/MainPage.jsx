@@ -20,7 +20,7 @@ export default function MainPage() {
       a.click();
       document.body.removeChild(a);
    };
-   
+
    useEffect(() => {
       // Récupération des données de l'utilisateur
       const fetchUserData = async () => {
@@ -37,7 +37,7 @@ export default function MainPage() {
             console.log("Erreur affichage donnée : ", err.message);
          }
       };
-      
+
       // Récupération des cours
       const fetchCourses = async () => {
          const coursesSnapshot = await getDocs(collection(db, "courses"));
@@ -55,7 +55,7 @@ export default function MainPage() {
    const handleSignOut = () => {
       signOut(auth)
          .then(() => {
-            navigate("/")
+            navigate("/");
          })
          .catch((error) => {
             // An error happened.
@@ -76,31 +76,40 @@ export default function MainPage() {
          <Link className="text-blue-500 hover:text-blue-800 mb-4" to="/addCourse">
             Voulez-vous ajouter un cours ?
          </Link>
-         {/* Affichage des cours */}
-         <div className="w-full">
+         <div className="w-50">
             {cours.map((course) => (
-               <div key={course.id} className="mb-4 p-4 shadow-lg rounded-lg bg-white cursor-pointer" onClick={() => selectCourse(course)}>
+               <div
+                  key={course.id}
+                  className="mb-4 p-4 shadow-lg rounded-lg bg-white cursor-pointer w-auto flex flex-col items-center justify-center"
+                  onClick={() => selectCourse(course)}
+               >
                   <h3 className="text-lg font-bold">{course.title}</h3>
                   <p className="text-gray-700">{course.description}</p>
-                  <img className="my-4 w-full object-cover h-48" src={course.imageUrl} alt={course.title} />
-                  <p className="text-sm">Créé par: {course.usermail}</p>
+                  <img className="my-4 w-30 object-cover h-48" src={course.imageUrl} alt={course.title} />
+                  <p className="text-sm">Créé par : {course.usermail}</p>
                </div>
             ))}
          </div>
-         {/* Vue agrandie du cours sélectionné */}
          {selectedCourse && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-               <div className="bg-white p-4 rounded-lg shadow-lg">
-                  <h3 className="text-2xl font-bold">{selectedCourse.title}</h3>
-                  <p className="text-gray-700">{selectedCourse.description}</p>
-                  <img className="my-4 w-full object-cover" src={selectedCourse.imageUrl} alt={selectedCourse.title} />
-                  <p className="text-sm">Créé par: {selectedCourse.usermail}</p>
-                  <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => setSelectedCourse(null)}>
-                     Fermer
-                  </button>
-                  <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={() => downloadFile(selectedCourse.fileUrl, selectedCourse.fileName)}>
-                     Télécharger
-                  </button>
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center h-auto">
+               <div className="bg-white p-4 rounded-lg shadow-lg flex flex-col justify-between h-full">
+                  <div className="flex-1">
+                     <h3 className="text-2xl font-bold">{selectedCourse.title}</h3>
+                     <p className="text-gray-700">{selectedCourse.description}</p>
+                     <img className="w-40 h-auto object-cover" src={selectedCourse.imageUrl} alt={selectedCourse.title} />
+                     <p className="text-sm">Créé par : {selectedCourse.usermail}</p>
+                  </div>
+                  <div className="flex justify-between">
+                     <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => setSelectedCourse(null)}>
+                        Fermer
+                     </button>
+                     <button
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => downloadFile(selectedCourse.fileUrl, selectedCourse.fileName)}
+                     >
+                        Télécharger
+                     </button>
+                  </div>
                </div>
             </div>
          )}
